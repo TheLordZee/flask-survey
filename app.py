@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = "ThisIsASecretKey"
 debug = DebugToolbarExtension(app)
+
 curr_question = 0
 questions = satisfaction_survey.questions
 RESPONSES = []
@@ -17,6 +18,7 @@ def get_home():
 
 @app.route(f'/questions/<int:question>')
 def get_question(question):
+    """Gets and displays the questions"""
     if question == curr_question and question < len(questions):
         question_text = questions[question].question
         choices = questions[question].choices
@@ -30,6 +32,7 @@ def get_question(question):
 
 @app.route('/answer', methods=['POST']) 
 def get_answer():
+    """Adds the answer to the RESPONSES list and increments the current question"""
     global curr_question
     if curr_question <= len(questions):
         curr_question += 1
