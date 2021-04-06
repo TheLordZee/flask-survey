@@ -10,10 +10,10 @@ debug = DebugToolbarExtension(app)
 
 curr_question = 0
 questions = satisfaction_survey.questions
-RESPONSES = []
 
 @app.route('/')
 def get_home():
+    session['RESPONSES'] = []
     return render_template('home.html', curr_question=curr_question)
 
 @app.route(f'/questions/<int:question>')
@@ -30,14 +30,16 @@ def get_question(question):
         flash("Trying to access an invalid question! Redirected to current question!")
         return redirect(f'/questions/{curr_question}')
 
-@app.route('/answer', methods=['POST']) 
+@app.route('/answer', methods=["POST"]) 
 def get_answer():
     """Adds the answer to the RESPONSES list and increments the current question"""
+    RESPONSES = session['RESPONSES']
     global curr_question
     if curr_question <= len(questions):
         curr_question += 1
     choice = request.args['choice']
     RESPONSES.append(choice)
+    session["RESPONSES"] = RESPONSES
     return redirect(f'/questions/{curr_question}')
 
 @app.route('/thanks')
